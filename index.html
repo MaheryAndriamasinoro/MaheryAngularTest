@@ -23,7 +23,7 @@
         <option value="fr">Français</option>
     </select>
 
-    <button onclick="window.location.href='StudentForm.html'">{{ translations[language].add }}</button>
+    <button onclick="window.location.href='studentForm.html'">{{ translations[language].add }}</button>
 
 
     <!--list of students-->
@@ -42,7 +42,7 @@
                 <td>{{ student.name }}</td>
                 <td>{{ student.age }}</td>
                 <td>
-                    <button ng-click="window.location.href='StudentForm.html?id=' + student.id">Edit</button>
+                    <button ng-click="window.location.href='studentForm.html?id=' + student.id">Edit</button>
                     <button ng-click="deleteStudent(student.id)">Delete</button>
                 </td>
             </tr>
