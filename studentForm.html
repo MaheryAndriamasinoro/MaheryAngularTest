@@ -59,6 +59,58 @@
             };
         });
     </script>
+
+    <style>
+         h2 {
+            color: darkblue;
+            font-size: 14px;
+        }
+
+      
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+
+     
+        button {
+            background-color: darkblue;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: navy;
+        }
+
+    
+        table {
+            width: 90%;
+            margin: 5%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+
+       
+        th:nth-child(1), td:nth-child(1) { width: 20%; } /* ID */
+        th:nth-child(2), td:nth-child(2) { width: 40%; } /* Name */
+        th:nth-child(3), td:nth-child(3) { width: 20%; } /* Age */
+        th:nth-child(4), td:nth-child(4) { width: 20%; } /* Actions */
+
+     
+        th {
+            background-color: darkblue;
+            color: white;
+        }
+    </style>
 </head>
 <body ng-controller="FormController">
     <h2>{{ translations[language].title }}</h2>
