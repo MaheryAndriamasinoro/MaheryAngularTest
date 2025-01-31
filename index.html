@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="StudentApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student List</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.1.12/angular-material.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.1.12/angular-material.min.css">
+    
+    <script>
+        var app = angular.module("StudentApp", ['ngMaterial']);
+
+        app.controller("StudentController", function ($scope) {
+            $scope.students = JSON.parse(localStorage.getItem("students")) || [];
+
+            // Pagination Variables
+            $scope.currentPage = 1;
+            $scope.pageSize = 20;
+            $scope.totalPages = Math.ceil($scope.students.length / $scope.pageSize);
+
+            // Language Support
+            $scope.language = localStorage.getItem("language") || "en";
+            $scope.translations = {
+                en: { title: "Student List", add: "Add Student", id: "ID", name: "Name", age: "Age", actions: "Actions" },
+                fr: { title: "Liste des Étudiants", add: "Ajouter Étudiant", id: "Numéro", name: "Nom", age: "Âge", actions: "Actions" }
+            };
+
+            $scope.changeLanguage = function () {
+                localStorage.setItem("language", $scope.language);
+            };
+
+            // Sorting Logic
+            $scope.sortColumn = 'name';
+            $scope.reverseSort = false;
+            $scope.sortData = function (column) {
+                $scope.reverseSort = ($scope.sortColumn === column) ? !$scope.reverseSort : false;
+                $scope.sortColumn = column;
+            };
+
+            // Get Paginated Students
+            $scope.getPaginatedStudents = function () {
+                var start = ($scope.currentPage - 1) * $scope.pageSize;
+                return $scope.students.slice(start, start + $scope.pageSize);
+            };
+
+            // Delete Student
+            $scope.deleteStudent = function (id) {
+                if (confirm("Are you sure you want to delete this student?")) {
+                    $scope.students = $scope.students.filter(student => student.id !== id);
+                    localStorage.setItem("students", JSON.stringify($scope.students));
+                    $scope.totalPages = Math.ceil($scope.students.length / $scope.pageSize);
+                }
+            };
+
+            // Pagination Controls
+            $scope.nextPage = function () {
+                if ($scope.currentPage < $scope.totalPages) $scope.currentPage++;
+            };
+            $scope.prevPage = function () {
+                if ($scope.currentPage > 1) $scope.currentPage--;
+            };
+        });
+    </script>
+</head>
+<body ng-controller="StudentController">
+    <h2>{{ translations[language].title }}</h2>
+
+    <label for="languageSelect">Language:</label>
+    <select id="languageSelect" ng-model="language" ng-change="changeLanguage()">
+        <option value="en">English</option>
+        <option value="fr">Français</option>
+    </select>
+
+    <button onclick="window.location.href='StudentForm.html'">{{ translations[language].add }}</button>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th ng-click="sortData('id')">{{ translations[language].id }}</th>
+                <th ng-click="sortData('name')">{{ translations[language].name }}</th>
+                <th ng-click="sortData('age')">{{ translations[language].age }}</th>
+                <th>{{ translations[language].actions }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="student in getPaginatedStudents() | orderBy:sortColumn:reverseSort">
+                <td>{{ student.id }}</td>
+                <td>{{ student.name }}</td>
+                <td>{{ student.age }}</td>
+                <td>
+                    <button ng-click="window.location.href='StudentForm.html?id=' + student.id">Edit</button>
+                    <button ng-click="deleteStudent(student.id)">Delete</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <button ng-disabled="currentPage == 1" ng-click="prevPage()">Previous</button>
+    <button ng-disabled="currentPage == totalPages" ng-click="nextPage()">Next</button>
+</body>
+</html>
