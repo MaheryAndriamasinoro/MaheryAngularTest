@@ -7,14 +7,15 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
 
     <script>
+        // declare app - same as index
         var app = angular.module("StudentApp", []);
 
         app.controller("FormController", function ($scope) {
             $scope.students = JSON.parse(localStorage.getItem("students")) || [];
 
-            // Get student ID from URL
-            const urlParams = new URLSearchParams(window.location.search);
-            const editId = urlParams.get("id");
+    // Get ID from index for edit
+     const urlParams = new URLSearchParams(window.location.search);
+    const editId = urlParams.get("id");
 
             if (editId) {
                 const student = $scope.students.find(s => s.id === editId);
@@ -31,17 +32,13 @@
                     return;
                 }
 
-                // Check if ID already exists
-                let existingStudent = $scope.students.find(s => s.id === $scope.student.id);
-                if (existingStudent && !editId) {
-                    alert("ID already exists. Please choose a unique ID.");
-                    return;
-                }
+  
 
                 if (editId) {
                     // Update existing student
                     $scope.students = $scope.students.map(s => (s.id === $scope.student.id ? $scope.student : s));
                 } else {
+                    
                     // Add new student
                     $scope.students.push($scope.student);
                 }
